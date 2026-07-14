@@ -15,7 +15,7 @@ const testSchema = new mongoose.Schema(
     description: String,
     testType: {
       type: String,
-      enum: ["free", "paid"], // Sirf 'free' ya 'paid' hi ho sakta hai
+      enum: ["free", "paid"], // it can be only free or paid
       default: "free",
     },
     price: {

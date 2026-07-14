@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const connectDb = require('./config/db')
 const adminRoutes = require('./routes/adminRoutes');
+const uiRouters = require('./routes/uiRoutes');
 
 
 const app = express();
@@ -22,6 +23,7 @@ app.set('views',path.join(__dirname,'views'));
 
 // use admin routes using /admin-api
 app.use('/admin-api', adminRoutes);
+app.use('/',uiRouters);
 
 app.get('/',(req,res)=>{
   res.send('EduVerse Server is running smoothly');

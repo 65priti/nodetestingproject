@@ -51,7 +51,7 @@ router.get("/all-test", async (req, res) => {
 
 // BLOGS START FROM HERE
 
-// 3. POST: Naya Educational Blog website par publish karna
+// Add blog redirection Api
 router.post("/add-blog", async (req, res) => {
   try {
     const { title, content, image, author } = req.body;
@@ -64,12 +64,41 @@ router.post("/add-blog", async (req, res) => {
     });
 
     await newBlog.save();
-    res.redirect("/admin-api/manage-blogs");
+    res.redirect("/manage-blogs");
     // res.status(201).json({
     //   status: "success",
     //   message: "Naya Blog article website par live ho chuka hai! 📝",
     //   data: newBlog,
     // });
+  } catch (error) {
+    res.status(500).json({ status: "fail", error: error.message });
+  }
+});
+
+// Update blog redirection Api
+router.post("/update-blog/:id", async (req, res) => {
+  try {
+    const { title, content, image, author } = req.body;
+    const blogId = req.params.id;
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      blogId,
+
+      { title, content, image, author },
+      { new: true, runValidators: true },
+    );
+    res.redirect("/view-all-blogs");
+  } catch (error) {
+    res.status(500).json({ status: "fail", error: error.message });
+  }
+});
+
+// Delete blog redirection Api
+router.delete("/delete-blog/:id", async (req, res) => {
+  try {
+    const blogId = req.params.id;
+    await Blog.findByIdAndDelete(blogId);
+    res.status(200).json({status: "success", message: "blog deleted successfully"})
   } catch (error) {
     res.status(500).json({ status: "fail", error: error.message });
   }
@@ -121,70 +150,6 @@ router.get("/view-contacts", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ status: "fail", error: error.message });
-  }
-});
-
-// ==========================================
-// 🎨 ADMIN UI VIEWS RENDERING ROUTES
-// ==========================================
-
-// 7. GET: Real Admin Dashboard Page ko Render karna
-router.get("/dashboard", (req, res) => {
-  res.render("admin/dashboard");
-});
-
-// admin/manage-tests
-router.get("/manage-tests", (req, res) => {
-  res.render("admin/manage-tests");
-});
-
-
-// 2. NAYA ROUTE: Alag se HTML list page render karne ke liye
-router.get("/view-all-tests", async (req, res) => {
-  try {
-    const tests = await Test.find().sort({ createdAt: -1 });
-
-    // Express automatic Status 200 ke sath ye page render karega
-    res.render("admin/all-tests-list", { tests });
-  } catch (error) {
-    // Agar database fail hua, toh Status 500 bhejenge
-    res.status(500).send("Error loading tests page: " + error.message);
-  }
-});
-
-
-
-
-
-
-// BLOG ROUTER START FROM HERE
-router.get("/manage-blogs",(req,res)=>{
-  res.render("admin/manage-blogs");
-})
-
-// 11. GET: Saare Blogs ki HTML list page render karna
-router.get("/view-all-blogs", async (req, res) => {
-  try {
-    const blogs = await Blog.find().sort({ createdAt: -1 });
-    // Express automatic Status 200 ke sath ye page render karega
-    res.render("admin/all-blogs-list", { blogs });
-  } catch (error) {
-    res.status(500).send("Error loading blogs page: " + error.message);
-  }
-});
-
-
-
-// 12. GET: Users dwara bheje gaye saare contact messages ka HTML page render karna
-router.get("/view-contacts-list", async (req, res) => {
-  try {
-    // Database se saare messages uthao (newest first)
-    const messages = await Contact.find().sort({ createdAt: -1 });
-    
-    // Express 'admin/view-contacts' EJS file ko render karega aur data pass karega
-    res.render("admin/view-contacts", { messages });
-  } catch (error) {
-    res.status(500).send("Error loading contact messages: " + error.message);
   }
 });
 

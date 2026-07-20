@@ -10,10 +10,11 @@
 
 <body>
     <section class="w-100 p-5 d-flex flex-column align-items-center justify-content-between">
-       <br><br>
+        <br><br>
         <div w-max-content>
             <h3 class="text-center mb-3">EduVerse Login</h3>
-            <form action="/admin-api/login" method="POST" class="card p-5 shadow" style="max-width: 500px; min-width: 500px; margin: auto;">
+            <form action="/admin-api/login" method="POST" class="card p-5 shadow"
+                style="max-width: 500px; min-width: 500px; margin: auto;">
                 <div class="mb-3">
                     <label class="form-label">Email Address</label>
                     <input type="email" name="email" class="form-control" required>
@@ -23,8 +24,10 @@
                     <label class="form-label">Password</label>
                     <input type="password" name="password" class="form-control" required>
                 </div>
-<br><br>
+                <br><br>
                 <button type="submit" class="btn btn-warning w-100">Sign In</button>
+                <br>
+                <p>if you have not an account? <a href="/register">Register Now</a></p>
             </form>
         </div>
     </section>

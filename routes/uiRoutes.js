@@ -1,27 +1,42 @@
 const express = require("express");
+const isAuth = require("../middleware/authMiddleware");
 const router = express.Router();
-const Text = require("../model/testModel");
+const Test = require("../model/testModel");
 const blog = require("../model/blogModel");
 const Contact = require("../model/contactModel");
 
 const { route } = require("./adminRoutes");
 
-router.get("/dashboard", (req, res) => {
+router.get("/dashboard", isAuth, (req, res) => {
   res.render("admin/dashboard");
 });
 
+// test route start from here
 router.get("/manage-tests", (req, res) => {
   res.render("admin/manage-tests");
 });
 
+router.get("/test-update-view/:id", async (req,res)=>{
+    const testData = await Test.findById(req.params.id);
+  if (!testData) {
+    return res.status(404).send("Test not found");
+  }
+  res.render("admin/update-test", { testData });
+});
+
+
 router.get("/view-all-tests", async (req, res) => {
   try {
-    const tests = await Text.find().sort({ createdAt: -1 });
+    const tests = await Test.find().sort({ createdAt: -1 });
     res.render("admin/all-tests-list", { tests });
   } catch (error) {
     res.status(500).send("Error loading tests page: " + error.message);
   }
 });
+// test route close from here
+
+
+
 
 // blog form ui
 router.get("/manage-blogs", (req, res) => {
@@ -57,6 +72,19 @@ router.get("/view-contacts-list", async (req, res) => {
   } catch (error) {
     res.status(500).send("Error loading contact messages: " + error.message);
   }
+});
+
+
+
+// login page route ui
+router.get("/login", (req, res) => {
+  res.render("auth/login"); 
+});
+
+
+//  Register page route ui
+router.get("/register", (req, res) => {
+  res.render("auth/registration");
 });
 
 module.exports = router;

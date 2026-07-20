@@ -16,7 +16,8 @@
             <ul class="nav flex-column gap-2">
                 <li class="nav-item"><a href="/dashboard" class="nav-link text-white">📊 Dashboard</a></li>
                 <li class="nav-item"><a href="/manage-tests" class="nav-link text-white">➕ Add New Test</a></li>
-                <li class="nav-item"><a href="/view-all-tests" class="nav-link text-white active fw-bold">📋 View All Tests</a></li>
+                <li class="nav-item"><a href="/view-all-tests" class="nav-link text-white active fw-bold">📋 View All
+                        Tests</a></li>
                 <li class="nav-item"><a href="/manage-blogs" class="nav-link text-white">✍️ Manage Blogs</a></li>
                 <li class="nav-item"><a href="/view-contacts-list" class="nav-link text-white">📞 View Messages</a></li>
             </ul>
@@ -35,11 +36,12 @@
                                 <th>Price</th>
                                 <th>Total Questions</th>
                                 <th>Created At</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% if(tests && tests.length > 0) { %>
-                                <% tests.forEach((test, index) => { %>
+                            <% if(tests && tests.length> 0) { %>
+                                <% tests.forEach((test, index)=> { %>
                                     <tr>
                                         <td>
                                             <%= index + 1 %>
@@ -48,12 +50,13 @@
                                             <%= test.title %>
                                         </td>
                                         <td>
-                                            <span class="badge <%= test.testType === 'free' ? 'bg-success' : 'bg-danger' %> text-capitalize">
+                                            <span
+                                                class="badge <%= test.testType === 'free' ? 'bg-success' : 'bg-danger' %> text-capitalize">
                                                 <%= test.testType %>
                                             </span>
                                         </td>
                                         <td>
-                                            <%= test.testType === 'free' ? '₹0' : '₹' + test.price %>
+                                            <%= test.testType==='free' ? '₹0' : '₹' + test.price %>
                                         </td>
                                         <td>
                                             <span class="badge bg-secondary">
@@ -63,19 +66,43 @@
                                         <td>
                                             <%= new Date(test.createdAt).toLocaleDateString('en-IN') %>
                                         </td>
+                                        <td style="display: flex; gap: 1rem;" >
+                                            <div>
+                                              <a href="/test-update-view/<%= test.id %>" >
+                                                <button>Edit</button>
+                                              </a>
+                                            </div>
+                                            <div><button onclick="deleteTestFunction('<%= test?.id  %>')" >Delete</button></div>
+                                        </td>
                                     </tr>
-                                <% }) %>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="6" class="text-center text-muted py-4">No test series found.</td>
-                                </tr>
-                            <% } %>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="6" class="text-center text-muted py-4">No test series
+                                                    found.</td>
+                                            </tr>
+                                            <% } %>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+
+
+    <script>
+        function deleteTestFunction(id){
+         fetch(`/admin-api/delete-test/${id}`, {
+            method: 'DELETE'
+         }).then((response)=>response.json()).then((response)=>{
+            console.log(response.status);
+            // if(response.status === 'success'){
+                window.location.reload();
+            // }
+         })
+        }
+    </script>
 
 </body>
 
